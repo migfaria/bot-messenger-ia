@@ -1,28 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const request = require('request');
+const request = require('request'); // para enviar mensagens ao Messenger
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+// Rota principal
 app.get('/', (req, res) => {
-  res.send('✅ Bot Messenger IA no ar!');
+  res.send('🤖 Bot Messenger IA está no ar!');
 });
 
 // ✅ Verificação do webhook
 app.get('/webhook', (req, res) => {
-  const VERIFY_TOKEN = 'verifica123'; // Usa o mesmo no Facebook Developer
+  const VERIFY_TOKEN = 'verifica123'; // O mesmo que colocaste no Messenger
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
 
   if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
-    console.log('🔐 Webhook verificado com sucesso!');
+    console.log('✅ Webhook verificado com sucesso!');
     res.status(200).send(challenge);
   } else {
-    console.log('❌ Verificação do webhook falhou.');
+    console.log('❌ Falha na verificação do webhook!');
     res.sendStatus(403);
   }
 });
@@ -32,16 +33,16 @@ app.post('/webhook', (req, res) => {
   const body = req.body;
 
   if (body.object === 'page') {
-    body.entry.forEach(entry => {
+    body.entry.forEach(function(entry) {
       const webhookEvent = entry.messaging[0];
       const senderId = webhookEvent.sender.id;
 
       if (webhookEvent.message && webhookEvent.message.text) {
-        const messageText = webhookEvent.message.text;
-        console.log(`📨 Mensagem recebida de ${senderId}: "${messageText}"`);
+        const receivedMessage = webhookEvent.message.text;
+        console.log(`📨 Mensagem recebida de ${senderId}: "${receivedMessage}"`);
 
-        // Envia resposta
-        enviarMensagem(senderId, `Recebi a tua mensagem: "${messageText}"`);
+        // Resposta simples
+        enviarMensagem(senderId, `Recebi a tua mensagem: "${receivedMessage}"`);
       }
     });
 
@@ -51,13 +52,13 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-// ✅ Enviar mensagem
-function enviarMensagem(senderId, texto) {
-  const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+// ✅ Função para enviar mensagem de volta ao Messenger
+function enviarMensagem(senderPsid, mensagemTexto) {
+  const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN; // Guardado no Render como variável de ambiente
 
   const corpoMensagem = {
-    recipient: { id: senderId },
-    message: { text: texto }
+    recipient: { id: senderPsid },
+    message: { text: mensagemTexto }
   };
 
   request({
@@ -74,4 +75,7 @@ function enviarMensagem(senderId, texto) {
   });
 }
 
-//
+// ✅ Iniciar servidor com porta dinâmica
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor ativo na porta ${PORT}`);
+});
