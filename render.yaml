@@ -6,5 +6,7 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      - key: PORT
-        value: 3000
+      - key: PAGE_ACCESS_TOKEN
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
