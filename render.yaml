@@ -7,6 +7,6 @@ services:
     startCommand: npm start
     envVars:
       - key: PAGE_ACCESS_TOKEN
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
+        value: "EAASEFd0LPpsBO6JfEbmQcfYIRYDZB9gys9rGyY4EKZBwVkH0oAXmhCoXmXtslLEINrX3CLxVZBZAZA1uPWMvUhUnX1C56VJYZA32dqEePgikzZBapjWEaLju5yZCq0KbCeEntE2eprt2FuEJHzgY3Sr2kuQol1XVlTvaMabjUIELtHRNZAqigxYz5SAtcwogugKeOKeZBytpnZAQ7Nq1HqRovlpn5Vu7AZDZD"
+
+
